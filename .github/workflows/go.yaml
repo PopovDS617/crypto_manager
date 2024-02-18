@@ -8,7 +8,7 @@ on:
 
 jobs:
   ms_price_receiver_lint:
-    name: lint
+    name: ms_price_receiver_lint
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -61,10 +61,10 @@ jobs:
           go-version: "1.21.6"
           cache-dependency-path: go.sum
 
-      - name: Build
+      - name: ms_price_receiver_build
         run: go build -o ./bin/ ./cmd/main.go
         working-directory: ./app/ms_price_receiver
 
-      - name: Test
+      - name: ms_price_receiver_test
         run: go test -v ./...
         working-directory: ./app/ms_price_receiver
