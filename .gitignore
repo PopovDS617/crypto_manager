@@ -1,0 +1,18 @@
+# ide
+*/.vscode/*
+
+# env
+.env
+
+# bin
+bin/
+
+# go
+go.work
+go.work.sum
+
+# coverage
+coverage.out
+
+#vendor
+vendor.protogen
