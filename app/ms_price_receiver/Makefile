@@ -9,4 +9,4 @@ lint:
 
 run:
 	@go build -o bin/ ./cmd/main.go
-	@BOOTSTRAP_SERVERS=localhost:9092 PORT=30000 ./bin/ms_price_receiver
+	@BOOTSTRAP_SERVERS=localhost:9092 PORT=1000 ./bin/main
