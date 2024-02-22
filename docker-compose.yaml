@@ -36,7 +36,31 @@ services:
       CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
       CONFLUENT_METRICS_ENABLE: "true"
       CONFLUENT_SUPPORT_CUSTOMER_ID: "anonymous"
-# volumes:
-#   grafana-storage: {}
-#   data:
-#   logs:
+
+  migrator-pg-token-master:
+    build:
+      context: .
+      dockerfile: ./token-migrator.Dockerfile
+    environment:
+      PG_DSN: "host=pg-token-master port=54322 dbname=pg-token-master user=token-user password=token-password sslmode=disable"
+      MIGRATION_DSN: "host=pg-token-master port=5432 dbname=pg-token-master user=token-user password=token-password sslmode=disable"
+      MIGRATION_DIR: ./migrations
+
+    depends_on: ["pg-token-master"]
+
+  pg-token-master:
+    image: postgres:14-alpine3.17
+    environment:
+      POSTGRES_DB: pg-token-master
+      POSTGRES_USER: token-user
+      POSTGRES_PASSWORD: token-password
+    ports:
+      - "54322:5432"
+    volumes:
+      - postgres_volume_token_master:/var/lib/postgresql/data
+
+volumes:
+  grafana-storage: {}
+  data:
+  logs:
+  postgres_volume_token_master:

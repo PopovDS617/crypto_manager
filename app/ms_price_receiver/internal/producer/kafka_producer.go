@@ -18,7 +18,7 @@ type KafkaProducer struct {
 	topic    string
 }
 
-func NewKafkaProducer(topic string) (*KafkaProducer, error) {
+func NewDataProducer(topic string) (*KafkaProducer, error) {
 	bootstrapServers := os.Getenv("BOOTSTRAP_SERVERS")
 
 	p, err := kafka.NewProducer(&kafka.ConfigMap{
