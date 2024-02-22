@@ -1,6 +1,6 @@
 module ms_price_receiver
 
-go 1.21.6
+go 1.22
 
 require (
 	github.com/confluentinc/confluent-kafka-go/v2 v2.3.0

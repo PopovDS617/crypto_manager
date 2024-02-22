@@ -8,8 +8,8 @@ type ReceivedTokenEntity struct {
 }
 
 type Token struct {
-	Symbol string
-	Price  float64
+	Symbol string  `json:"symbol"`
+	Price  float64 `json:"price"`
 }
 
 type ProduceData struct {

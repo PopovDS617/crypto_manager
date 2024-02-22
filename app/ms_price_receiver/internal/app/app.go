@@ -20,7 +20,7 @@ func initHTTPClient(url string) *client.HTTPClient {
 }
 
 func initDataProducer(topic string) (producer.DataProducer, error) {
-	return producer.NewKafkaProducer(topic)
+	return producer.NewDataProducer(topic)
 }
 
 func NewApp() (*App, error) {
@@ -63,8 +63,6 @@ func (a *App) Run() {
 		produceData := model.ProduceData{
 			TokenData: tokenData,
 			Timestamp: responseTime}
-
-		fmt.Println(produceData)
 
 		err = a.dataProducer.Produce(produceData)
 
