@@ -13,6 +13,7 @@ import (
 
 type serviceProvider struct {
 	pgConfig        config.PGConfig
+	kafkaConfig     config.KafkaConfig
 	dbClient        db.Client
 	tokenRepository repository.TokenRepository
 	dataConsumer    consumer.DataConsumer
@@ -23,7 +24,7 @@ func newServiceProvider() *serviceProvider {
 	return &serviceProvider{}
 }
 
-func (s *serviceProvider) PGConfig() config.PGConfig {
+func (s *serviceProvider) setPGConfig() config.PGConfig {
 	if s.pgConfig == nil {
 		cfg, err := config.NewPGConfig()
 		if err != nil {
@@ -35,10 +36,22 @@ func (s *serviceProvider) PGConfig() config.PGConfig {
 
 	return s.pgConfig
 }
+func (s *serviceProvider) setKafkaConfig() config.KafkaConfig {
+	if s.kafkaConfig == nil {
+		cfg, err := config.NewKafkaConfig()
+		if err != nil {
+			log.Fatalf("failed to get kafka config: %s", err.Error())
+		}
 
-func (s *serviceProvider) DBClient(ctx context.Context) db.Client {
+		s.kafkaConfig = cfg
+	}
+
+	return s.kafkaConfig
+}
+
+func (s *serviceProvider) setDBClient(ctx context.Context) db.Client {
 	if s.dbClient == nil {
-		cl, err := pg.New(ctx, s.PGConfig().DSN())
+		cl, err := pg.New(ctx, s.setPGConfig().DSN())
 		if err != nil {
 			log.Fatalf("failed to create db client: %v", err)
 		}
@@ -54,16 +67,17 @@ func (s *serviceProvider) DBClient(ctx context.Context) db.Client {
 	return s.dbClient
 }
 
-func (s *serviceProvider) TokenRepository(ctx context.Context) repository.TokenRepository {
+func (s *serviceProvider) setTokenRepository(ctx context.Context) repository.TokenRepository {
 	if s.tokenRepository == nil {
-		s.tokenRepository = tokenRepository.NewRepository(s.DBClient(ctx))
+		s.tokenRepository = tokenRepository.NewRepository(s.setDBClient(ctx))
 	}
 	return s.tokenRepository
 }
 
-func (s *serviceProvider) DataConsumer(topic string) consumer.DataConsumer {
-
+func (s *serviceProvider) setDataConsumer(_ context.Context) consumer.DataConsumer {
 	if s.dataConsumer == nil {
+		topic := s.setKafkaConfig().Topic()
+
 		consumer, err := consumer.NewDataConsumer(topic)
 
 		if err != nil {

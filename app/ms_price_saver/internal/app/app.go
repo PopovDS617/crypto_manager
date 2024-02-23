@@ -3,6 +3,7 @@ package app
 import (
 	"context"
 	"fmt"
+	"ms_price_saver/internal/converter"
 )
 
 type App struct {
@@ -33,25 +34,43 @@ func (a *App) initDeps(ctx context.Context) error {
 	}
 
 	return nil
-
 }
 
-func (a *App) initServiceProvider(_ context.Context) error {
+func (a *App) initServiceProvider(ctx context.Context) error {
 	a.serviceProvider = newServiceProvider()
+	a.serviceProvider.setDataConsumer(ctx)
+	a.serviceProvider.setTokenRepository(ctx)
+	a.serviceProvider.setDBClient(ctx)
+
 	return nil
 }
 
 func (a *App) Run() {
 
-	topic := "prices"
-
-	consumer := a.serviceProvider.DataConsumer(topic)
-
 	for {
 
-		data, err := consumer.Consume()
+		msg, err := a.serviceProvider.dataConsumer.Consume()
 
-		fmt.Println(data, err)
+		if err != nil {
+			fmt.Println(err)
+		} else {
+
+			tokenData := converter.ToRepoFromMessageQueue(msg)
+
+			for _, v := range tokenData {
+
+				id, err := a.serviceProvider.tokenRepository.Create(context.Background(), &v)
+
+				if err != nil {
+					fmt.Println(err)
+				} else {
+					fmt.Println("saved in DB with id: ", id)
+				}
+
+			}
+
+		}
+
 	}
 
 }

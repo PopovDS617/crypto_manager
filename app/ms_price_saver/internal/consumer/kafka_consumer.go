@@ -27,8 +27,6 @@ func NewDataConsumer(topic string) (*KafkaConsumer, error) {
 		"auto.offset.reset": "earliest",
 	})
 
-	fmt.Println(bootstrapServers)
-
 	if err != nil {
 		panic(err)
 	}
@@ -47,6 +45,8 @@ func NewDataConsumer(topic string) (*KafkaConsumer, error) {
 func (c *KafkaConsumer) Consume() (*model.MessageQueueTokenDataList, error) {
 	var data model.MessageQueueTokenDataList
 	msg, err := c.consumer.ReadMessage(-1)
+
+	fmt.Println(msg)
 
 	if err != nil {
 		fmt.Printf("kafka consume error %s\n", err)

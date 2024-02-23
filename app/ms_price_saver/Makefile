@@ -9,4 +9,4 @@ lint:
 
 run:
 	@go build -o bin/ ./cmd/main.go
-	BOOTSTRAP_SERVERS=localhost:9092 PORT=2000 PG_DSN="host=http://localhost port=54322 dbname=pg-token-master user=token-user password=token-password sslmode=disable" ./bin/main
+	KAFKA_TOPIC=prices BOOTSTRAP_SERVERS=localhost:9092 PORT=2000 PG_DSN="host=localhost port=54322 dbname=pg-token-master user=token-user password=token-password sslmode=disable" ./bin/main

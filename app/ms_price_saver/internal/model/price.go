@@ -12,7 +12,7 @@ type MessageQueueTokenDataList struct {
 	Timestamp time.Time
 }
 
-type MessageQueueTokenData struct {
+type RepoTokenData struct {
 	TokenData TokenPrice
 	Timestamp time.Time
 }
