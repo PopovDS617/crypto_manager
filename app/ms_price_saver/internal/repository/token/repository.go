@@ -19,7 +19,7 @@ func NewRepository(db db.Client) repository.TokenRepository {
 	return &repo{db: db}
 }
 
-func (r *repo) Create(ctx context.Context, data *model.MessageQueueTokenData) (int64, error) {
+func (r *repo) Create(ctx context.Context, data *model.RepoTokenData) (int64, error) {
 
 	var (
 		tableName       = data.TokenData.Symbol
@@ -34,6 +34,7 @@ func (r *repo) Create(ctx context.Context, data *model.MessageQueueTokenData) (i
 		Suffix("RETURNING id")
 
 	query, args, err := builder.ToSql()
+
 	if err != nil {
 		return 0, err
 	}

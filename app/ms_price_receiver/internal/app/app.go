@@ -40,7 +40,7 @@ func NewApp() (*App, error) {
 func (a *App) Run() {
 
 	for {
-		time.Sleep(time.Second * 2)
+		time.Sleep(time.Second * 5)
 
 		res, err := a.httpClient.Client.Get(a.httpClient.Url, nil)
 

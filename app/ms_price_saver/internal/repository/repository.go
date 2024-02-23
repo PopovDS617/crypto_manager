@@ -7,5 +7,5 @@ import (
 )
 
 type TokenRepository interface {
-	Create(ctx context.Context, data *model.MessageQueueTokenData) (int64, error)
+	Create(ctx context.Context, data *model.RepoTokenData) (int64, error)
 }
